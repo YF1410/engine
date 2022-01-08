@@ -152,9 +152,11 @@
   <ItemGroup>
     <ClCompile Include="Angle.cpp" />
     <ClCompile Include="Audio.cpp" />
+    <ClCompile Include="Camera.cpp" />
     <ClCompile Include="DebugText.cpp" />
     <ClCompile Include="DirectXCommon.cpp" />
     <ClCompile Include="FbxLoader.cpp" />
+    <ClCompile Include="FbxObj3d.cpp" />
     <ClCompile Include="Vector3.cpp" />
     <ClCompile Include="GameScene.cpp" />
     <ClCompile Include="Input.cpp" />
@@ -167,9 +169,11 @@
   <ItemGroup>
     <ClInclude Include="Angle.h" />
     <ClInclude Include="Audio.h" />
+    <ClInclude Include="Camera.h" />
     <ClInclude Include="DebugText.h" />
     <ClInclude Include="DirectXCommon.h" />
     <ClInclude Include="FbxLoader.h" />
+    <ClInclude Include="FbxObj3d.h" />
     <ClInclude Include="Vector3.h" />
     <ClInclude Include="GameScene.h" />
     <ClInclude Include="Input.h" />

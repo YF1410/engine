@@ -106,7 +106,7 @@ private: // 静的メンバ変数
 	CD3DX12_GPU_DESCRIPTOR_HANDLE gpuDescHandleSRV;
 	// 頂点バッファビュー
 	D3D12_VERTEX_BUFFER_VIEW vbView;
-	// インデックスバッファビュー
+	// インデック	スバッファビュー
 	D3D12_INDEX_BUFFER_VIEW ibView;	
 	// 頂点データ配列
 	std::vector<VertexPosNormalUv> vertices;
@@ -127,8 +127,12 @@ private:// 静的メンバ関数
 
 public: // メンバ関数
 	bool Initialize(const std::string& text);
+	//バッファ生成
+	void CreateBuffers(ID3D12Device* device);
 	// 描画
 	void Draw(ID3D12GraphicsCommandList* cmdList);
+	//モデルの変形行列取得
+	const XMMATRIX& GetModelTransform() { return meshNode->globalTransform; }
 
 private: // メンバ変数
 	ComPtr<ID3D12Resource> constBuffB1; // 定数バッファ

@@ -418,7 +418,7 @@ void FbxLoader::ParseSkin(Model* model, FbxMesh* fbxMesh) {
 				float weight = 0.0f;
 
 				//2番目以降のウェイトを合計
-				for (int j = 1; j < Model::MAX_BONE_INDICES; j) {
+				for (int j = 1; j < Model::MAX_BONE_INDICES; j++) {
 					weight += vertices[i].boneWeight[j];
 				}
 

@@ -17,7 +17,7 @@ struct VSInput {
 	float3 normal : NORMAL;				//頂点法線
 	float2 uv	: TEXCOORD;				//テクスチャー座標
 	uint4 boneIndices : BONEINDICES;	//ボーンの番号
-	float4 boneWeights :BONEWEIGHT;		//ボーンのスキンウェイト
+	float4 boneWeights :BONEWEIGHTS;		//ボーンのスキンウェイト
 };
 
 // 頂点シェーダーからピクセルシェーダーへのやり取りに使用する構造体

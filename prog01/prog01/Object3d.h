@@ -37,6 +37,7 @@ public: // サブクラス
 	struct ConstBufferDataSkin {
 		XMMATRIX bones[MAX_BONES];
 	};
+	
 
 public: // 静的メンバ関数
 	/// <summary>

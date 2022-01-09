@@ -50,8 +50,15 @@ enum CrossAngle {
 	LeftUp = 31500,
 };
 
+
 class Input
 {
+public:
+	struct MouseMove {
+		LONG    lX;
+		LONG    lY;
+		LONG    lZ;
+	};
 private:
 	//namespace省略
 	template <class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
@@ -79,10 +86,13 @@ public: //メンバ関数
 	bool TriggerMouse(MouseButton mouseButtonType);
 	//マウスの移動量取得
 	XMFLOAT2 GetMouseVelocity();
+	/// <summary>
+	/// マウス移動量を取得
+	/// </summary>
+	/// <returns>マウス移動量</returns>
+	MouseMove GetMouseMove();
 	//マウスの位置取得
 	XMFLOAT2 GetMousePosition();
-
-	void UpdateGamePad();
 
 	// パッドボタンの押下をチェック
 	bool PushPad(ButtonKind padButtonType);

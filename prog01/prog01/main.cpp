@@ -42,13 +42,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		return 1;
 	}
 
-	// 3Dオブジェクト静的初期化
-	if (!Object3d::StaticInitialize(dxCommon->GetDevice(), WinApp::window_width, WinApp::window_height))
-	{
-		assert(0);
-		return 1;
-	}
-
 	//FBX初期化
 	FbxLoader::GetInstance()->Initialize(dxCommon->GetDevice());
 

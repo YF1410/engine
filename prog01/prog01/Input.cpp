@@ -78,6 +78,15 @@ XMFLOAT2 Input::GetMouseVelocity() {
 	return XMFLOAT2((float)currentMouseState.lX, (float)currentMouseState.lY);
 }
 
+Input::MouseMove Input::GetMouseMove() {
+	MouseMove tmp;
+	tmp.lX = currentMouseState.lX;
+	tmp.lY = currentMouseState.lY;
+	tmp.lZ = currentMouseState.lZ;
+	return tmp;
+}
+
+
 XMFLOAT2 Input::GetMousePosition() {
 	return XMFLOAT2(mousePos);
 }
@@ -231,49 +240,6 @@ bool Input::CheckDownRStick() {
 	}
 	return false;
 }
-
-//if (pad_data.rgdwPOV[0] != 0xFFFFFFFF) {
-//	// 有効
-//}
-//
-//switch (pad_data.rgdwPOV[0]) {
-//	// 上
-//case 0:
-//	is_push[ButtonKind::UpButton] = true;
-//	break;
-//	// 右上
-//case 4500:
-//	is_push[ButtonKind::UpButton] = true;
-//	is_push[ButtonKind::RightButton] = true;
-//	break;
-//	// 右
-//case 9000:
-//	is_push[ButtonKind::RightButton] = true;
-//	break;
-//	// 右下
-//case 13500:
-//	is_push[ButtonKind::DownButton] = true;
-//	is_push[ButtonKind::RightButton] = true;
-//	break;
-//	// 下
-//case 18000:
-//	is_push[ButtonKind::DownButton] = true;
-//	break;
-//	// 左下
-//case 22500:
-//	is_push[ButtonKind::DownButton] = true;
-//	is_push[ButtonKind::LeftButton] = true;
-//	braek;
-//	// 左
-//case 27000:
-//	is_push[ButtonKind::LeftButton] = true;
-//	break;
-//	/ 左上
-//case 31500:
-//	is_push[ButtonKind::UpButton] = true;
-//	is_push[ButtonKind::LeftButton] = true;
-//	break;
-//}
 
 bool Input::PushRightCross() {
 	if (currentPadState.rgdwPOV[0] == Right) {

@@ -84,8 +84,6 @@ public: //メンバ関数
 	bool PushMouse(MouseButton mouseButtonType);
 	// マウスのトリガーをチェック
 	bool TriggerMouse(MouseButton mouseButtonType);
-	//マウスの移動量取得
-	XMFLOAT2 GetMouseVelocity();
 	/// <summary>
 	/// マウス移動量を取得
 	/// </summary>

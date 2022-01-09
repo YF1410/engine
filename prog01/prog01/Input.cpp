@@ -74,10 +74,6 @@ void Input::Update() {
 	//ShowCursor(false);
 }
 
-XMFLOAT2 Input::GetMouseVelocity() {
-	return XMFLOAT2((float)currentMouseState.lX, (float)currentMouseState.lY);
-}
-
 Input::MouseMove Input::GetMouseMove() {
 	MouseMove tmp;
 	tmp.lX = currentMouseState.lX;

@@ -18,7 +18,7 @@ void FbxLoader::ConvertMatrixFromFbx(DirectX::XMMATRIX* dst, const FbxAMatrix& s
 		//列
 		for (int j = 0; j < 4; j++) {
 			//1要素コピー
-			dst->r[i].m128_f32[j] = (float)src.Get(i,j);
+			dst->r[i].m128_f32[j] = (float)src.Get(i, j);
 		}
 	}
 }
@@ -117,7 +117,7 @@ void FbxLoader::ParseNodeRecursive(Model* model, FbxNode* fbxNode, Node* parent)
 		//親の変形を乗算
 		node.globalTransform *= parent->globalTransform;
 	}
-	
+
 	//FBXノードのメッシュ情報を解析
 	FbxNodeAttribute* fbxNodeAttribute = fbxNode->GetNodeAttribute();
 
@@ -139,7 +139,7 @@ void FbxLoader::ParseMesh(Model* model, FbxNode* fbxNode) {
 	FbxMesh* fbxMesh = fbxNode->GetMesh();
 
 	//頂点座標読み取り
-	ParseMeshVertices(model,fbxMesh);
+	ParseMeshVertices(model, fbxMesh);
 	//面を構成するデータの読み取り
 	ParseMeshFaces(model, fbxMesh);
 	//マテリアルの読み取り
@@ -198,7 +198,7 @@ void FbxLoader::ParseMeshFaces(Model* model, FbxMesh* fbxMesh) {
 			//頂点法線読み込み
 			Model::VertexPosNormalUvSkin& vertex = vertices[index];
 			FbxVector4 normal;
-			
+
 			if (fbxMesh->GetPolygonVertexNormal(i, j, normal)) {
 				vertex.normal.x = (float)normal[0];
 				vertex.normal.y = (float)normal[1];
@@ -404,7 +404,7 @@ void FbxLoader::ParseSkin(Model* model, FbxMesh* fbxMesh) {
 			//左の要素の方が大きければtrue そうでなければfalseを返す
 			return lhs.weight > rhs.weight;
 			});
-		
+
 		int weightArrayIndex = 0;
 
 		//降順ソート済みのウェイトリストから

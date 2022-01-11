@@ -8,8 +8,7 @@
 #include <string>
 #include "Model.h"
 
-class FbxLoader
-{
+class FbxLoader {
 private://エイリアス
 	//std::を省略
 	using string = std::string;
@@ -57,7 +56,7 @@ public:
 	/// <param name = "model">読み込み先モデルオブジェクト</param>
 	/// <param name = "fbxNode">解析対象のノード</param>
 	/// <param name = "parent">親ノード</param>
-	void ParseNodeRecursive(Model* model, FbxNode* fbxNode, Node*parent = nullptr);
+	void ParseNodeRecursive(Model* model, FbxNode* fbxNode, Node* parent = nullptr);
 
 	/// <summary>
 	/// メッシュ読み取り

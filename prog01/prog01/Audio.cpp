@@ -4,22 +4,19 @@
 
 #pragma comment(lib,"xaudio2.lib")
 
-bool Audio::Initialize()
-{
+bool Audio::Initialize() {
 	HRESULT result;
 
 	// XAudioエンジンのインスタンスを生成
 	result = XAudio2Create(&xAudio2, 0, XAUDIO2_DEFAULT_PROCESSOR);
-	if FAILED(result)
-	{
+	if FAILED(result) 	{
 		assert(0);
 		return false;
 	}
 
 	// マスターボイスを生成
 	result = xAudio2->CreateMasteringVoice(&masterVoice);
-	if FAILED(result)
-	{
+	if FAILED(result) 	{
 		assert(0);
 		return false;
 	}
@@ -27,16 +24,14 @@ bool Audio::Initialize()
 	return true;
 }
 //                          ファイル名   ループする回数(0～255) 音のボリューム
-void Audio::PlayWave(const char* filename, int loopCount, float volume)
-{
+void Audio::PlayWave(const char* filename, int loopCount, float volume) {
 	HRESULT result;
 	//ファイル入力ストリームのインスタンス
 	std::ifstream file;
 	//.wavファイルをバリナリモードで開く
 	file.open(filename, std::ios_base::binary);
 	//ファイルオープン失敗を検出する
-	if (file.fail())
-	{
+	if (file.fail()) 	{
 		assert(0);
 	}
 
@@ -44,8 +39,7 @@ void Audio::PlayWave(const char* filename, int loopCount, float volume)
 	RiffHeader riff;
 	file.read((char*)&riff, sizeof(riff));
 	// ファイルがRIFFかチェック
-	if (strncmp(riff.chunk.id, "RIFF", 4) != 0)
-	{
+	if (strncmp(riff.chunk.id, "RIFF", 4) != 0) 	{
 		assert(0);
 	}
 
@@ -71,8 +65,7 @@ void Audio::PlayWave(const char* filename, int loopCount, float volume)
 
 	// 波形フォーマットを元にSourceVoiceの生成
 	result = xAudio2->CreateSourceVoice(&pSourceVoice, &wfex, 0, 2.0f, &voiceCallback);
-	if FAILED(result)
-	{
+	if FAILED(result) 	{
 		delete[] pBuffer;
 		assert(0);
 		return;
@@ -88,31 +81,27 @@ void Audio::PlayWave(const char* filename, int loopCount, float volume)
 
 	// 波形データの再生
 	result = pSourceVoice->SubmitSourceBuffer(&buf);
-	if FAILED(result)
-	{
+	if FAILED(result) 	{
 		delete[] pBuffer;
 		assert(0);
 		return;
 	}
 
 	result = pSourceVoice->SetVolume(volume);
-	if FAILED(result)
-	{
+	if FAILED(result) 	{
 		delete[] pBuffer;
 		assert(0);
 		return;
 	}
 
 	result = pSourceVoice->Start();
-	if FAILED(result)
-	{
+	if FAILED(result) 	{
 		delete[] pBuffer;
 		assert(0);
 		return;
 	}
 }
 
-void Audio::Stop()
-{
+void Audio::Stop() {
 	pSourceVoice->Stop();
 }

@@ -24,19 +24,19 @@ private: // エイリアス
 
 public: // サブクラス
 	// 頂点データ構造体
-	struct VertexPos 	{
+	struct VertexPos {
 		XMFLOAT3 pos; // xyz座標
 		float scale; // スケール
 	};
 
 	// 定数バッファ用データ構造体
-	struct ConstBufferData 	{
+	struct ConstBufferData {
 		XMMATRIX mat;	// ビュープロジェクション行列
 		XMMATRIX matBillboard;	// ビルボード行列
 	};
 
 	// パーティクル1粒
-	class Particle 	{
+	class Particle {
 		// Microsoft::WRL::を省略
 		template <class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
 		// DirectX::を省略

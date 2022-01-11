@@ -51,8 +51,7 @@ enum CrossAngle {
 };
 
 
-class Input
-{
+class Input {
 public:
 	struct MouseMove {
 		LONG    lX;

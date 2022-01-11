@@ -5,8 +5,7 @@
 #include <d3d12.h>
 #include <DirectXMath.h>
 
-class Sprite
-{
+class Sprite {
 private: // エイリアス
 // Microsoft::WRL::を省略
 	template <class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
@@ -18,14 +17,12 @@ private: // エイリアス
 
 public: // サブクラス
 	// 頂点データ構造体
-	struct VertexPosUv
-	{
+	struct VertexPosUv 	{
 		XMFLOAT3 pos; // xyz座標
 		XMFLOAT2 uv;  // uv座標
 	};
 	// 定数バッファ用データ構造体
-	struct ConstBufferData
-	{
+	struct ConstBufferData 	{
 		XMFLOAT4 color; // 色 (RGBA)
 		XMMATRIX mat; // ３Ｄ変換行列
 	};

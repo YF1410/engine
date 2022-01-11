@@ -154,7 +154,7 @@ bool Input::PushPad(ButtonKind padButtonType) {
 
 bool Input::TriggerPad(ButtonKind padButtonType) {
 	// 異常な引数を検出
-	assert(0 <= padButtonType<= ButtonKindMax);
+	assert(0 <= padButtonType <= ButtonKindMax);
 
 	// 前回が0で、今回が0でなければトリガー
 	if (!currentPadState.rgbButtons[padButtonType] && prevPadState.rgbButtons[padButtonType]) {
@@ -281,7 +281,7 @@ bool Input::TriggerRightCross() {
 	if (currentPadState.rgdwPOV[0] == Right && prevPadState.rgdwPOV[0] != Right) {
 		return true;
 	}
-	if ((currentPadState.rgdwPOV[0] == RightUp && prevPadState.rgdwPOV[0] != RightUp)|| 
+	if ((currentPadState.rgdwPOV[0] == RightUp && prevPadState.rgdwPOV[0] != RightUp) ||
 		(currentPadState.rgdwPOV[0] == RightDown && prevPadState.rgdwPOV[0] != RightDown)) {
 		return true;
 	}

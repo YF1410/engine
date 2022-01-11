@@ -16,7 +16,7 @@ DebugText* DebugText::GetInstance() {
 
 void DebugText::Initialize(UINT texnumber) {
 	// 全てのスプライトデータについて
-	for (int i = 0; i < _countof(spriteDatas); i++) 	{
+	for (int i = 0; i < _countof(spriteDatas); i++) {
 		// スプライトを生成する
 		spriteDatas[i] = Sprite::Create(texnumber, { 0,0 });
 	}
@@ -32,7 +32,7 @@ void DebugText::Print(const std::string& text, float x, float y, float scale = 1
 
 void DebugText::NPrint(int len, const char* text) {
 	// 全ての文字について
-	for (int i = 0; i < len; i++) 	{
+	for (int i = 0; i < len; i++) {
 		// 最大文字数超過
 		if (spriteIndex >= maxCharCount) {
 			break;
@@ -70,7 +70,7 @@ void DebugText::Printf(const char* fmt, ...) {
 // まとめて描画
 void DebugText::DrawAll(ID3D12GraphicsCommandList* cmdList) {
 	// 全ての文字のスプライトについて
-	for (int i = 0; i < spriteIndex; i++) 	{
+	for (int i = 0; i < spriteIndex; i++) {
 		// スプライト描画
 		spriteDatas[i]->Draw();
 	}

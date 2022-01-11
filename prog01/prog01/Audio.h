@@ -4,8 +4,7 @@
 #include <xaudio2.h>
 #include <wrl.h>
 
-class XAudio2VoiceCallback : public IXAudio2VoiceCallback
-{// オーディオコールバック
+class XAudio2VoiceCallback : public IXAudio2VoiceCallback {// オーディオコールバック
 public:
 	// ボイス処理パスの開始時
 	//STDMETHOD_(void, OnVoiceProcessingPassStart) (THIS_ UINT32 BytesRequired) {};
@@ -15,42 +14,37 @@ public:
 	// バッファストリームの再生が終了した時
 	STDMETHOD_(void, OnStreamEnd) (THIS) {};
 	// バッファの使用開始時
-	STDMETHOD_(void, OnBufferStart) (THIS_ void *pBufferContext) {};
+	STDMETHOD_(void, OnBufferStart) (THIS_ void* pBufferContext) {};
 	// バッファの末尾に達した時
-	STDMETHOD_(void, OnBufferEnd) (THIS_ void *pBufferContext)
-	{
+	STDMETHOD_(void, OnBufferEnd) (THIS_ void* pBufferContext) 	{
 		// バッファを解放する
 		delete[] pBufferContext;
 	};
 	// 再生がループ位置に達した時
-	STDMETHOD_(void, OnLoopEnd) (THIS_ void *pBufferContext) {};
+	STDMETHOD_(void, OnLoopEnd) (THIS_ void* pBufferContext) {};
 	// ボイスの実行エラー時
-	STDMETHOD_(void, OnVoiceError) (THIS_ void *pBufferContext, HRESULT Error) {};
+	STDMETHOD_(void, OnVoiceError) (THIS_ void* pBufferContext, HRESULT Error) {};
 };
 
-class Audio
-{// オーディオ
+class Audio {// オーディオ
 private: // エイリアス
 // Microsoft::WRL::を省略
 	template <class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
 public: // サブクラス
 	// チャンクヘッダ
-	struct Chunk
-	{
+	struct Chunk 	{
 		char id[4]; // チャンク毎のID
 		int	size; // チャンクサイズ
 	};
 
 	// RIFFヘッダチャンク
-	struct RiffHeader
-	{
+	struct RiffHeader 	{
 		Chunk chunk;   // "RIFF"
 		char type[4]; // "WAVE"
 	};
 
 	// FMTチャンク
-	struct FormatChunk
-	{
+	struct FormatChunk 	{
 		Chunk chunk; // "fmt "
 		WAVEFORMAT fmt; // 波形フォーマット
 	};
@@ -60,12 +54,12 @@ public: // メンバ関数
 	bool Initialize();
 
 	// サウンドファイルの読み込みと再生
-	void PlayWave(const char *filename, int loopCount, float volume);
+	void PlayWave(const char* filename, int loopCount, float volume);
 
 	void Stop();
 private: // メンバ変数
 	ComPtr<IXAudio2> xAudio2;
-	IXAudio2MasteringVoice *masterVoice;
+	IXAudio2MasteringVoice* masterVoice;
 	XAudio2VoiceCallback voiceCallback;
-	IXAudio2SourceVoice *pSourceVoice = nullptr;
+	IXAudio2SourceVoice* pSourceVoice = nullptr;
 };

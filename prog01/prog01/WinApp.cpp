@@ -2,11 +2,9 @@
 
 const wchar_t WinApp::windowClassName[] = L"Impact";
 
-LRESULT WinApp::WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
-{
+LRESULT WinApp::WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 	// メッセージで分岐
-	switch (msg)
-	{
+	switch (msg) 	{
 	case WM_DESTROY: // ウィンドウが破棄された
 		PostQuitMessage(0); // OSに対して、アプリの終了を伝える
 		return 0;
@@ -14,8 +12,7 @@ LRESULT WinApp::WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 	return DefWindowProc(hwnd, msg, wparam, lparam); // 標準の処理を行う
 }
 
-void WinApp::CreateGameWindow()
-{
+void WinApp::CreateGameWindow() {
 	// ウィンドウクラスの設定
 	wndClass.cbSize = sizeof(WNDCLASSEX);
 	wndClass.lpfnWndProc = (WNDPROC)WindowProc; // ウィンドウプロシージャ
@@ -49,14 +46,12 @@ void WinApp::CreateGameWindow()
 	ShowWindow(hwnd, SW_SHOW);
 }
 
-void WinApp::TerminateGameWindow()
-{
+void WinApp::TerminateGameWindow() {
 	// ウィンドウクラスを登録解除
 	UnregisterClass(wndClass.lpszClassName, wndClass.hInstance);
 }
 
-bool WinApp::ProcessMessage()
-{
+bool WinApp::ProcessMessage() {
 	MSG msg{}; // メッセージ
 
 	if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE)) // メッセージがある？

@@ -14,10 +14,10 @@ private:
 	//    cx:座標　cy:座標  　mv:移動量   
 	float startPos1 = 0;
 	float startPos2 = 0;
-	float endPos1 = 0; 
-	float endPos2 = 0; 
-	float angle1 = 0; 
-	float angle2 = 0; 
+	float endPos1 = 0;
+	float endPos2 = 0;
+	float angle1 = 0;
+	float angle2 = 0;
 	float resultRadians = 0;
 };
 

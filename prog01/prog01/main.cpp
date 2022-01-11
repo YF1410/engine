@@ -5,8 +5,7 @@
 #include "FbxLoader.h"
 
 //# Windowsアプリでのエントリーポイント(main関数)
-int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
-{
+int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	//ポインタ置き場
 	WinApp* win = nullptr;
 	DirectXCommon* dxCommon = nullptr;
@@ -30,14 +29,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 	// オーディオの初期化
 	audio = new Audio();
-	if (!audio->Initialize())
-	{
+	if (!audio->Initialize()) 	{
 		assert(0);
 		return 1;
 	}
 	// スプライト静的初期化
-	if (!Sprite::StaticInitialize(dxCommon->GetDevice(), WinApp::window_width, WinApp::window_height))
-	{
+	if (!Sprite::StaticInitialize(dxCommon->GetDevice(), WinApp::window_width, WinApp::window_height)) 	{
 		assert(0);
 		return 1;
 	}
@@ -55,8 +52,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	while (true)  // ゲームループ
 	{
 		// メッセージ処理
-		if (win->ProcessMessage())
-		{
+		if (win->ProcessMessage()) 		{
 			break;
 		}
 

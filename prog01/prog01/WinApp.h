@@ -3,8 +3,7 @@
 
 #define WINDOW_CLASS_NAME = "Impact";
 
-class WinApp
-{
+class WinApp {
 public: // 静的メンバ変数
 	// ウィンドウサイズ
 	static const int window_width = 1280; // 横幅

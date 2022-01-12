@@ -43,19 +43,16 @@ void Input::Update() {
 	//全キーの入力状態を取得する
 	result = devkeyboard->GetDeviceState(sizeof(keyState), keyState);
 
-	//ゲームパッド情報の取得開始
-	result = devpad->Acquire();
-	//ポーリング開始
-	result = devpad->Poll();
-	if (FAILED(result)) {
-		assert(0);
-	}
+	if (padFlag == true) {
+		//ゲームパッド情報の取得開始
+		result = devpad->Acquire();
 
-	prevPadState = currentPadState;
+		prevPadState = currentPadState;
 
-	result = devpad->GetDeviceState(sizeof(currentPadState), &currentPadState);
-	if (FAILED(result)) {
-		devpad->Poll();
+		result = devpad->GetDeviceState(sizeof(currentPadState), &currentPadState);
+		if (FAILED(result)) {
+			devpad->Poll();
+		}
 	}
 
 	//マウス情報の取得開始
@@ -402,84 +399,84 @@ bool Input::CreatePadDevice(HINSTANCE hInstance, HWND hwnd) {
 	//パッドデバイスの生成
 	result = dinput->CreateDevice(GUID_Joystick, &devpad, NULL);
 	if (FAILED(result)) {
-		assert(0);
-		return result;
+		padFlag = false;
 	}
 
-	//入力データ形式のセット
-	result = devpad->SetDataFormat(&c_dfDIJoystick);
-	if (FAILED(result)) {
-		assert(0);
-		return result;
+	if (padFlag == true) {
+		//入力データ形式のセット
+		result = devpad->SetDataFormat(&c_dfDIJoystick);
+		if (FAILED(result)) {
+			assert(0);
+			return result;
+		}
+
+		// 軸モードを絶対値モードとして設定
+		DIPROPDWORD diprop;
+		ZeroMemory(&diprop, sizeof(diprop));
+		diprop.diph.dwSize = sizeof(diprop);
+		diprop.diph.dwHeaderSize = sizeof(diprop.diph);
+		diprop.diph.dwHow = DIPH_DEVICE;
+		diprop.diph.dwObj = 0;
+		diprop.dwData = DIPROPAXISMODE_ABS;	// 絶対値モードの指定(DIPROPAXISMODE_RELにしたら相対値)
+
+		// 軸モードを変更
+		if (FAILED(devpad->SetProperty(DIPROP_AXISMODE, &diprop.diph))) {
+			return false;
+		}
+
+		// X軸の値の範囲設定
+		DIPROPRANGE diprg;
+		//ZeroMemory(&amp; diprg, sizeof(diprg));
+		diprg.diph.dwSize = sizeof(diprg);
+		diprg.diph.dwHeaderSize = sizeof(diprg.diph);
+		diprg.diph.dwHow = DIPH_BYOFFSET;
+		diprg.diph.dwObj = DIJOFS_X;
+		diprg.lMin = -1000;
+		diprg.lMax = 1000;
+		if (FAILED(devpad->SetProperty(DIPROP_RANGE, &diprg.diph))) {
+			return false;
+		}
+
+		// Y軸の値の範囲設定
+		diprg.diph.dwObj = DIJOFS_Y;
+		if (FAILED(devpad->SetProperty(DIPROP_RANGE, &diprg.diph))) {
+			return false;
+		}
+
+		//Z軸の値の範囲設定
+		diprg.diph.dwObj = DIJOFS_Z;
+		if (FAILED(devpad->SetProperty(DIPROP_RANGE, &diprg.diph))) {
+			return false;
+		}
+
+		//X軸の値の範囲設定
+		diprg.diph.dwObj = DIJOFS_RX;
+		if (FAILED(devpad->SetProperty(DIPROP_RANGE, &diprg.diph))) {
+			return false;
+		}
+
+		//Y軸の値の範囲設定
+		diprg.diph.dwObj = DIJOFS_RY;
+		if (FAILED(devpad->SetProperty(DIPROP_RANGE, &diprg.diph))) {
+			return false;
+		}
+
+		//Z軸の値の範囲設定
+		diprg.diph.dwObj = DIJOFS_RZ;
+		if (FAILED(devpad->SetProperty(DIPROP_RANGE, &diprg.diph))) {
+			return false;
+		}
+
+		//排他制御レベルのセット
+		result = devmouse->SetCooperativeLevel
+		(
+			hwnd, DISCL_FOREGROUND | DISCL_EXCLUSIVE | DISCL_FOREGROUND
+		);
+		if (FAILED(result)) {
+			assert(0);
+			return result;
+		}
 	}
-
-	// 軸モードを絶対値モードとして設定
-	DIPROPDWORD diprop;
-	ZeroMemory(&diprop, sizeof(diprop));
-	diprop.diph.dwSize = sizeof(diprop);
-	diprop.diph.dwHeaderSize = sizeof(diprop.diph);
-	diprop.diph.dwHow = DIPH_DEVICE;
-	diprop.diph.dwObj = 0;
-	diprop.dwData = DIPROPAXISMODE_ABS;	// 絶対値モードの指定(DIPROPAXISMODE_RELにしたら相対値)
-
-	// 軸モードを変更
-	if (FAILED(devpad->SetProperty(DIPROP_AXISMODE, &diprop.diph))) {
-		return false;
-	}
-
-	// X軸の値の範囲設定
-	DIPROPRANGE diprg;
-	//ZeroMemory(&amp; diprg, sizeof(diprg));
-	diprg.diph.dwSize = sizeof(diprg);
-	diprg.diph.dwHeaderSize = sizeof(diprg.diph);
-	diprg.diph.dwHow = DIPH_BYOFFSET;
-	diprg.diph.dwObj = DIJOFS_X;
-	diprg.lMin = -1000;
-	diprg.lMax = 1000;
-	if (FAILED(devpad->SetProperty(DIPROP_RANGE, &diprg.diph))) {
-		return false;
-	}
-
-	// Y軸の値の範囲設定
-	diprg.diph.dwObj = DIJOFS_Y;
-	if (FAILED(devpad->SetProperty(DIPROP_RANGE, &diprg.diph))) {
-		return false;
-	}
-
-	//Z軸の値の範囲設定
-	diprg.diph.dwObj = DIJOFS_Z;
-	if (FAILED(devpad->SetProperty(DIPROP_RANGE, &diprg.diph))) {
-		return false;
-	}
-
-	//X軸の値の範囲設定
-	diprg.diph.dwObj = DIJOFS_RX;
-	if (FAILED(devpad->SetProperty(DIPROP_RANGE, &diprg.diph))) {
-		return false;
-	}
-
-	//Y軸の値の範囲設定
-	diprg.diph.dwObj = DIJOFS_RY;
-	if (FAILED(devpad->SetProperty(DIPROP_RANGE, &diprg.diph))) {
-		return false;
-	}
-
-	//Z軸の値の範囲設定
-	diprg.diph.dwObj = DIJOFS_RZ;
-	if (FAILED(devpad->SetProperty(DIPROP_RANGE, &diprg.diph))) {
-		return false;
-	}
-
-	//排他制御レベルのセット
-	result = devmouse->SetCooperativeLevel
-	(
-		hwnd, DISCL_FOREGROUND | DISCL_EXCLUSIVE | DISCL_FOREGROUND
-	);
-	if (FAILED(result)) {
-		assert(0);
-		return result;
-	}
-
 	return true;
 }
 

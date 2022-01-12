@@ -131,6 +131,7 @@ private: //ƒƒ“ƒo•Ï”
 	BYTE keyState[256] = {};
 	BYTE prevKeyState[256] = {};
 	float unresponsiveRange = 200;
+	bool padFlag = false;
 
 private:
 	static DIMOUSESTATE currentMouseState;

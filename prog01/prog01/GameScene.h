@@ -10,6 +10,7 @@
 #include "Audio.h"
 #include "DebugCamera.h"
 #include "Object3d.h"
+#include "FbxObject3d.h"
 
 #include <vector>
 
@@ -70,10 +71,10 @@ private: // メンバ変数
 	Sprite* spriteBG = nullptr;
 	ParticleManager* particleMan = nullptr;
 
-	Model* model1 = nullptr;
-	Object3d* object1 = nullptr;
+	FbxModel* model1 = nullptr;
+	FbxObject3d* object1 = nullptr;
 
-	Model* model2 = nullptr;
-	Object3d* object2 = nullptr;
+	FbxModel* model2 = nullptr;
+	FbxObject3d* object2 = nullptr;
 };
 

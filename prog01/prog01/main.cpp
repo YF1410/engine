@@ -39,6 +39,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		return 1;
 	}
 
+	// パーティクルマネージャ初期化
+	ParticleManager::GetInstance()->Initialize(dxCommon->GetDevice());
 	//FBX初期化
 	FbxLoader::GetInstance()->Initialize(dxCommon->GetDevice());
 

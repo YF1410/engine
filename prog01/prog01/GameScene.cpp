@@ -47,18 +47,19 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input, Audio* audio) 
 	// 背景スプライト生成
 	spriteBG = Sprite::Create(1, { 0.0f,0.0f });
 	// パーティクルマネージャ生成
-	//particleMan = ParticleManager::GetInstance();
-	//particleMan->SetCamera(camera);
+	particleMan = ParticleManager::GetInstance();
+	particleMan->SetCamera(camera);
 
 	// テクスチャ2番に読み込み
 	Sprite::LoadTexture(2, L"Resources/tex1.png");
 
 	// カメラ注視点をセット
-	camera->SetTarget({ 0, 20, 0 });
-	camera->SetDistance(100.0f);
+	camera->SetTarget({ 0, 0, 0 });
+	camera->SetDistance(50.0f);
 
 	// モデル名を指定してファイル読み込み
 	model1 = FbxLoader::GetInstance()->LoadModelFromFile("boneTest");
+	model2 = FbxLoader::GetInstance()->LoadModelFromFile("cube");
 
 	// デバイスをセット
 	Object3d::SetDevice(dxCommon->GetDevice());
@@ -70,13 +71,25 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input, Audio* audio) 
 	object1 = new Object3d;
 	object1->Initialize();
 	object1->SetModel(model1);
+
+	object2 = new Object3d;
+	object2->Initialize();
+	object2->SetModel(model2);
 }
 
 void GameScene::Update() {
 	camera->Update();
-	//particleMan->Update();
+	particleMan->Update();
+
+	if (input->PushPad(ButtonA)) {
+		object1->PlayAnimation();
+	}
+	if (input->PushPad(ButtonB)) {
+		object1->StopAnimation();
+	}
 
 	object1->Update();
+	object2->Update();
 }
 
 void GameScene::Draw() {
@@ -101,9 +114,10 @@ void GameScene::Draw() {
 
 #pragma region 3D描画
 	object1->Draw(cmdList);
+	object2->Draw(cmdList);
 
 	// パーティクルの描画
-	//particleMan->Draw(cmdList);
+	particleMan->Draw(cmdList);
 #pragma endregion
 
 #pragma region 前景スプライト描画

@@ -72,5 +72,8 @@ private: // メンバ変数
 
 	Model* model1 = nullptr;
 	Object3d* object1 = nullptr;
+
+	Model* model2 = nullptr;
+	Object3d* object2 = nullptr;
 };
 

@@ -76,6 +76,16 @@ public: // メンバ関数
 
 	void SetModel(Model* model) { this->model = model; }
 
+	/// <summary>
+	/// アニメーション開始
+	/// </summary>
+	void PlayAnimation();
+
+	/// <summary>
+	/// アニメーション停止
+	/// </summary>
+	void StopAnimation();
+
 protected: // メンバ変数
 	// 定数バッファ（座標変換行列用）
 	ComPtr<ID3D12Resource> constBuffTransform;
@@ -91,4 +101,14 @@ protected: // メンバ変数
 	XMMATRIX matWorld;
 	// モデル
 	Model* model = nullptr;
+	//1フレームの時間
+	FbxTime frameTime;
+	//アニメーション開始時間
+	FbxTime startTime;
+	//アニメーション終了時間
+	FbxTime endTime;
+	//現在時間(アニメーション
+	FbxTime currentTime;
+	//アニメーション再生中
+	bool isPlay = false;
 };

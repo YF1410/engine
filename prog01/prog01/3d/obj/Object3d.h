@@ -1,115 +1,222 @@
-#pragma once
+ï»¿#pragma once
 
 #include <Windows.h>
 #include <wrl.h>
 #include <d3d12.h>
 #include <DirectXMath.h>
 #include <d3dx12.h>
+#include <string>
+
 #include "Model.h"
 #include "Camera.h"
+#include "LightGroup.h"
+#include "CollisionInfo.h"
 
+class BaseCollider;
+
+/// <summary>
+/// 3Dã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
+/// </summary>
 class Object3d {
-protected: // ƒGƒCƒŠƒAƒX
-	// Microsoft::WRL::‚ğÈ—ª
+protected: // ã‚¨ã‚¤ãƒªã‚¢ã‚¹
+	// Microsoft::WRL::ã‚’çœç•¥
 	template <class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
-	// DirectX::‚ğÈ—ª
+	// DirectX::ã‚’çœç•¥
 	using XMFLOAT2 = DirectX::XMFLOAT2;
 	using XMFLOAT3 = DirectX::XMFLOAT3;
 	using XMFLOAT4 = DirectX::XMFLOAT4;
 	using XMMATRIX = DirectX::XMMATRIX;
 
-public: // ƒTƒuƒNƒ‰ƒX
+public: // ã‚µãƒ–ã‚¯ãƒ©ã‚¹
 
-	// ’è”ƒoƒbƒtƒ@—pƒf[ƒ^\‘¢‘ÌB0
-	struct ConstBufferDataB0 	{
-		XMMATRIX viewproj;  //ƒrƒ…[ƒvƒƒWƒFƒNƒVƒ‡ƒ“s—ñ
-		XMMATRIX world;     //ƒ[ƒ‹ƒhs—ñ
-		XMFLOAT3 cameraPos; //ƒJƒƒ‰À•W(ƒ[ƒ‹ƒhÀ•W)
+	// ãƒ‘ã‚¤ãƒ—ãƒ©ã‚¤ãƒ³ã‚»ãƒƒãƒˆ
+	struct PipelineSet 	{
+		// ãƒ«ãƒ¼ãƒˆã‚·ã‚°ãƒãƒãƒ£
+		ComPtr<ID3D12RootSignature> rootsignature;
+		// ãƒ‘ã‚¤ãƒ—ãƒ©ã‚¤ãƒ³ã‚¹ãƒ†ãƒ¼ãƒˆã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
+		ComPtr<ID3D12PipelineState> pipelinestate;
 	};
 
-private: // ’è”
+	// å®šæ•°ãƒãƒƒãƒ•ã‚¡ç”¨ãƒ‡ãƒ¼ã‚¿æ§‹é€ ä½“B0
+	struct ConstBufferDataB0 	{
+		XMMATRIX viewproj;    // ãƒ“ãƒ¥ãƒ¼ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ã‚·ãƒ§ãƒ³è¡Œåˆ—
+		XMMATRIX world; // ãƒ¯ãƒ¼ãƒ«ãƒ‰è¡Œåˆ—
+		XMFLOAT3 cameraPos; // ã‚«ãƒ¡ãƒ©åº§æ¨™ï¼ˆãƒ¯ãƒ¼ãƒ«ãƒ‰åº§æ¨™ï¼‰
+	};
 
-public: // Ã“Iƒƒ“ƒoŠÖ”
-	// Ã“I‰Šú‰»
+public: // é™çš„ãƒ¡ãƒ³ãƒé–¢æ•°
+	/// <summary>
+	/// é™çš„åˆæœŸåŒ–
+	/// </summary>
+	/// <param name="device">ãƒ‡ãƒã‚¤ã‚¹</param>
 	static void StaticInitialize(ID3D12Device* device, Camera* camera = nullptr);
-	// ƒOƒ‰ƒtƒBƒbƒNƒpƒCƒvƒ‰ƒCƒ“¶¬
-	static bool InitializeGraphicsPipeline();
-	// •`‰æ‘Oˆ—
+
+	/// <summary>
+	/// ã‚°ãƒ©ãƒ•ã‚£ãƒƒã‚¯ãƒ‘ã‚¤ãƒ—ãƒ©ã‚¤ãƒ³ã®ç”Ÿæˆ
+	/// </summary>
+	static void CreateGraphicsPipeline();
+
+	/// <summary>
+	/// ã‚«ãƒ¡ãƒ©ã®ã‚»ãƒƒãƒˆ
+	/// </summary>
+	/// <param name="camera">ã‚«ãƒ¡ãƒ©</param>
+	static void SetCamera(Camera* camera) {
+		Object3d::camera = camera;
+	}
+
+	/// <summary>
+	/// ãƒ©ã‚¤ãƒˆã‚°ãƒ«ãƒ¼ãƒ—ã®ã‚»ãƒƒãƒˆ
+	/// </summary>
+	/// <param name="lightGroup">ãƒ©ã‚¤ãƒˆã‚°ãƒ«ãƒ¼ãƒ—</param>
+	static void SetLightGroup(LightGroup* lightGroup) {
+		Object3d::lightGroup = lightGroup;
+	}
+
+	/// <summary>
+	/// æç”»å‰å‡¦ç†
+	/// </summary>
+	/// <param name="cmdList">æç”»ã‚³ãƒãƒ³ãƒ‰ãƒªã‚¹ãƒˆ</param>
 	static void PreDraw(ID3D12GraphicsCommandList* cmdList);
-	// •`‰æŒãˆ—
+
+	/// <summary>
+	/// æç”»å¾Œå‡¦ç†
+	/// </summary>
 	static void PostDraw();
-	// 3DƒIƒuƒWƒFƒNƒg¶¬
-	static Object3d* Create();
-	// ƒJƒƒ‰‚ÌƒZƒbƒg
-	static void SetCamera(Camera* camera) { Object3d::camera = camera; }
 
-private: // Ã“Iƒƒ“ƒo•Ï”
-	// ƒfƒoƒCƒX
+	/// <summary>
+	/// 3Dã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆç”Ÿæˆ
+	/// </summary>
+	/// <returns></returns>
+	static Object3d* Create(Model* model = nullptr);
+
+private: // é™çš„ãƒ¡ãƒ³ãƒå¤‰æ•°
+	// ãƒ‡ãƒã‚¤ã‚¹
 	static ID3D12Device* device;
-	// ƒRƒ}ƒ“ƒhƒŠƒXƒg
+	// ã‚³ãƒãƒ³ãƒ‰ãƒªã‚¹ãƒˆ
 	static ID3D12GraphicsCommandList* cmdList;
-	// ƒ‹[ƒgƒVƒOƒlƒ`ƒƒ
-	static ComPtr<ID3D12RootSignature> rootsignature;
-	// ƒpƒCƒvƒ‰ƒCƒ“ƒXƒe[ƒgƒIƒuƒWƒFƒNƒg
-	static ComPtr<ID3D12PipelineState> pipelinestate;
-	// ƒJƒƒ‰
+	// ãƒ‘ã‚¤ãƒ—ãƒ©ã‚¤ãƒ³
+	static PipelineSet pipelineSet;
+	// ã‚«ãƒ¡ãƒ©
 	static Camera* camera;
+	// ãƒ©ã‚¤ãƒˆ
+	static LightGroup* lightGroup;
 
-public: // ƒƒ“ƒoŠÖ”
-	// ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+public: // ãƒ¡ãƒ³ãƒé–¢æ•°
+	/// <summary>
+	/// ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
+	/// </summary>
 	Object3d() = default;
-	// ƒfƒXƒgƒ‰ƒNƒ^
-	virtual ~Object3d();
-	// ‰Šú‰»
-	virtual bool Initialize();
-	// –ˆƒtƒŒ[ƒ€ˆ—
-	virtual void Update();
-	// •`‰æ
-	virtual void Draw();
-	// s—ñ‚ÌXV
-	void UpdateWorldMatrix();
-	// À•W‚Ìæ“¾
-	const XMFLOAT3& GetPosition() { return position; }
-	// X,Y,Z²‰ñ‚è‚Ìæ“¾
-	const XMFLOAT3& GetRotation() { return rotation; }
-	// ƒXƒP[ƒ‹‚Ìæ“¾
-	const XMFLOAT3& GetScale() { return scale; }
-	// ƒ[ƒ‹ƒhs—ñ‚Ìæ“¾
-	const XMMATRIX& GetMatWorld() { return matWorld; }
-	// ƒ[ƒ‹ƒhÀ•W‚ğæ“¾
-	XMFLOAT3 GetWorldPosition();
-	// ƒ‚ƒfƒ‹‚ğæ“¾
-	inline Model* GetModel() { return model; }
 
-	// À•W‚Ìİ’è
+	/// <summary>
+	/// ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
+	/// </summary>
+	virtual ~Object3d();
+
+	/// <summary>
+	/// åˆæœŸåŒ–
+	/// </summary>
+	/// <returns>æˆå¦</returns>
+	virtual bool Initialize();
+
+	/// <summary>
+	/// æ¯ãƒ•ãƒ¬ãƒ¼ãƒ å‡¦ç†
+	/// </summary>
+	virtual void Update();
+
+	/// <summary>
+	/// æç”»
+	/// </summary>
+	virtual void Draw();
+
+	/// <summary>
+	/// åº§æ¨™ã®å–å¾—
+	/// </summary>
+	/// <returns>åº§æ¨™</returns>
+	const XMFLOAT3& GetPosition() { return position; }
+
+	/// <summary>
+	/// å›è»¢ã®å–å¾—
+	/// </summary>
+	/// <returns>å›è»¢</returns>
+	const XMFLOAT3& GetRotation() { return rotation; }
+
+	/// <summary>
+	/// ãƒ¯ãƒ¼ãƒ«ãƒ‰è¡Œåˆ—ã®å–å¾—
+	/// </summary>
+	/// <returns>ãƒ¯ãƒ¼ãƒ«ãƒ‰è¡Œåˆ—</returns>
+	const XMMATRIX& GetMatWorld() { return matWorld; }
+
+	/// <summary>
+	/// åº§æ¨™ã®è¨­å®š
+	/// </summary>
+	/// <param name="position">åº§æ¨™</param>
 	void SetPosition(XMFLOAT3 position) { this->position = position; }
-	// X,Y,Z²‰ñ‚è‚Ìİ’è
+
 	void SetRotation(XMFLOAT3 rotation) { this->rotation = rotation; }
-	// ƒXƒP[ƒ‹‚Ìİ’è
+
+	/// <summary>
+	/// ã‚¹ã‚±ãƒ¼ãƒ«ã®è¨­å®š
+	/// </summary>
+	/// <param name="position">ã‚¹ã‚±ãƒ¼ãƒ«</param>
 	void SetScale(XMFLOAT3 scale) { this->scale = scale; }
-	// ƒ‚ƒfƒ‹‚Ìİ’è
-	void SetModel(Model* model) { this->model = model; };
-	// ƒrƒ‹ƒ{[ƒh‚Ìİ’è
+
+	/// <summary>
+	/// ãƒ¢ãƒ‡ãƒ«ã®ã‚»ãƒƒãƒˆ
+	/// </summary>
+	/// <param name="model">ãƒ¢ãƒ‡ãƒ«</param>
+	void SetModel(Model* model) { this->model = model; }
+
+	/// <summary>
+	/// ãƒ“ãƒ«ãƒœãƒ¼ãƒ‰ãƒ•ãƒ©ã‚°ã®ã‚»ãƒƒãƒˆ
+	/// </summary>
+	/// <param name="isBillboard">ãƒ“ãƒ«ãƒœãƒ¼ãƒ‰ã‹</param>
 	void SetBillboard(bool isBillboard) { this->isBillboard = isBillboard; }
 
-protected: // ƒƒ“ƒo•Ï”
-	ComPtr<ID3D12Resource> constBuffB0; // ’è”ƒoƒbƒtƒ@
-	// F
-	XMFLOAT4 color = { 1,1,1,1 };
-	// ƒ[ƒJƒ‹ƒXƒP[ƒ‹
-	XMFLOAT3 scale = { 1,1,1 };
-	// X,Y,Z²‰ñ‚è‚Ìƒ[ƒJƒ‹‰ñ“]Šp
-	XMFLOAT3 rotation = { 0,0,0 };
-	// ƒ[ƒJƒ‹À•W
-	XMFLOAT3 position = { 0,0,0 };
-	// ƒ[ƒJƒ‹ƒ[ƒ‹ƒh•ÏŠ·s—ñ
-	XMMATRIX matWorld;
-	// eƒIƒuƒWƒFƒNƒg
-	Object3d* parent = nullptr;
-	// ƒ‚ƒfƒ‹
-	Model* model = nullptr;
-	// ƒrƒ‹ƒ{[ƒh
-	bool isBillboard = false;
-	//ƒNƒ‰ƒX–¼(ƒfƒoƒbƒN—p)
+	/// <summary>
+	/// ã‚³ãƒ©ã‚¤ãƒ€ãƒ¼ã®ã‚»ãƒƒãƒˆ
+	/// </summary>
+	/// <param name="collider">ã‚³ãƒ©ã‚¤ãƒ€ãƒ¼</param>
+	void SetCollider(BaseCollider* collider);
+
+	/// <summary>
+	/// è¡çªæ™‚ã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯é–¢æ•°
+	/// </summary>
+	/// <param name="info">è¡çªæƒ…å ±</param>
+	virtual void OnCollision(const CollisionInfo& info) {}
+
+	/// <summary>
+	/// ãƒ¯ãƒ¼ãƒ«ãƒ‰åº§æ¨™ã‚’å–å¾—
+	/// </summary>
+	/// <returns></returns>
+	XMFLOAT3 GetWorldPosition();
+
+	/// <summary>
+	/// ãƒ¢ãƒ‡ãƒ«ã‚’å–å¾—
+	/// </summary>
+	/// <returns>ãƒ¢ãƒ‡ãƒ«</returns>
+	inline Model* GetModel() { return model; }
+
+protected: // ãƒ¡ãƒ³ãƒå¤‰æ•°
+
 	const char* name = nullptr;
+
+	ComPtr<ID3D12Resource> constBuffB0; // å®šæ•°ãƒãƒƒãƒ•ã‚¡
+	// è‰²
+	XMFLOAT4 color = { 1,1,1,1 };
+	// ãƒ­ãƒ¼ã‚«ãƒ«ã‚¹ã‚±ãƒ¼ãƒ«
+	XMFLOAT3 scale = { 1,1,1 };
+	// X,Y,Zè»¸å›ã‚Šã®ãƒ­ãƒ¼ã‚«ãƒ«å›è»¢è§’
+	XMFLOAT3 rotation = { 0,0,0 };
+	// ãƒ­ãƒ¼ã‚«ãƒ«åº§æ¨™
+	XMFLOAT3 position = { 0,0,0 };
+	// ãƒ­ãƒ¼ã‚«ãƒ«ãƒ¯ãƒ¼ãƒ«ãƒ‰å¤‰æ›è¡Œåˆ—
+	XMMATRIX matWorld;
+	// è¦ªã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
+	Object3d* parent = nullptr;
+	// ãƒ¢ãƒ‡ãƒ«
+	Model* model = nullptr;
+	// ãƒ“ãƒ«ãƒœãƒ¼ãƒ‰
+	bool isBillboard = false;
+	// ã‚³ãƒ©ã‚¤ãƒ€ãƒ¼
+	BaseCollider* collider = nullptr;
 };

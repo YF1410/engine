@@ -79,11 +79,11 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input, Audio* audio) 
 void GameScene::Update() {
 	camera->Update();
 	particleMan->Update();
-
-	if (input->PushPad(ButtonA)) {
+	//object1->PlayAnimation();
+	if (input->PushPad(ButtonA)||input->PushKey(DIK_0)) {
 		object1->PlayAnimation();
 	}
-	if (input->PushPad(ButtonB)) {
+	if (input->PushPad(ButtonB)||input->PushKey(DIK_1)) {
 		object1->StopAnimation();
 	}
 

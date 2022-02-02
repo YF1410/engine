@@ -6,6 +6,7 @@
 #include <wrl.h>
 #include <d3dx12.h>
 #include <cstdlib>
+#include <chrono>
 
 #include "WinApp.h"
 
@@ -48,17 +49,52 @@ private: // メンバ変数
 	ComPtr<ID3D12Fence> fence;
 	UINT64 fenceVal = 0;
 
+	ComPtr<ID3D12DescriptorHeap> imguiHeap;
+	float deltaTime = 0.0f;
+	float frameRate = 0.0f;
+	float commandWaitTime = 0.0f;
+	std::chrono::steady_clock::time_point lastUpdate;
+
 private: // メンバ関数
-	// DXGIデバイス初期化
+	/// <summary>
+	/// DXGIデバイス初期化
+	/// </summary>
+	/// <returns>成否</returns>
 	bool InitializeDXGIDevice();
-	// スワップチェーンの生成
+
+	/// <summary>
+	/// スワップチェーンの生成
+	/// </summary>
+	/// <returns>成否</returns>
 	bool CreateSwapChain();
-	// コマンド関連初期化
+
+	/// <summary>
+	/// コマンド関連初期化
+	/// </summary>
+	/// <returns>成否</returns>
 	bool InitializeCommand();
-	// レンダーターゲット生成
+
+	/// <summary>
+	/// レンダーターゲット生成
+	/// </summary>
+	/// <returns>成否</returns>
 	bool CreateFinalRenderTargets();
-	// 深度バッファ生成
+
+	/// <summary>
+	/// 深度バッファ生成
+	/// </summary>
+	/// <returns>成否</returns>
 	bool CreateDepthBuffer();
-	// フェンス生成
+
+	/// <summary>
+	/// フェンス生成
+	/// </summary>
+	/// <returns>成否</returns>
 	bool CreateFence();
+
+	/// <summary>
+	/// imgui初期化
+	/// </summary>
+	/// <returns>成否</returns>
+	bool InitImgui();
 };

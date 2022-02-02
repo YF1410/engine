@@ -4,6 +4,7 @@
 #include <cassert>
 #include <sstream>
 #include <iomanip>
+#include "imgui.h"
 
 using namespace DirectX;
 
@@ -49,15 +50,12 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input, Audio* audio) 
 	particleMan = ParticleManager::GetInstance();
 	particleMan->SetCamera(camera);
 
-	// テクスチャ2番に読み込み
-	Sprite::LoadTexture(2, L"Resources/tex1.png");
-
 	// カメラ注視点をセット
 	camera->SetTarget({ 0, 0, 0 });
 	camera->SetDistance(50.0f);
 
 	// モデル名を指定してファイル読み込み
-	model1 = FbxLoader::GetInstance()->LoadModelFromFile("boneTest");
+	model1 = FbxLoader::GetInstance()->LoadModelFromFile("Walking");
 	model2 = FbxLoader::GetInstance()->LoadModelFromFile("cube");
 
 	// デバイスをセット
@@ -87,11 +85,24 @@ void GameScene::Update() {
 		object1->StopAnimation();
 	}
 
+	object2->SetPosition({object2Pos[0], object2Pos[1], object2Pos[2]});
+
 	object1->Update();
 	object2->Update();
 }
 
 void GameScene::Draw() {
+
+	object2Pos[0] = object2->GetPosition().x;
+	object2Pos[1] = object2->GetPosition().y;
+	object2Pos[2] = object2->GetPosition().z;
+
+	ImGui::Begin("Light");
+	ImGui::SetWindowPos(ImVec2(0, 0));
+	ImGui::SetWindowSize(ImVec2(500, 200));
+	ImGui::InputFloat3("object2Pos", object2Pos);
+	ImGui::End();
+
 	// コマンドリストの取得
 	ID3D12GraphicsCommandList* cmdList = dxCommon->GetCommandList();
 

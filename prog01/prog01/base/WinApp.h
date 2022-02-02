@@ -1,8 +1,6 @@
 #pragma once
 #include <Windows.h>
 
-#define WINDOW_CLASS_NAME = "Impact";
-
 class WinApp {
 public: // 静的メンバ変数
 	// ウィンドウサイズ

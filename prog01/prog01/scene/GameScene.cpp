@@ -101,6 +101,8 @@ void GameScene::Draw() {
 	ImGui::SetWindowPos(ImVec2(0, 0));
 	ImGui::SetWindowSize(ImVec2(500, 200));
 	ImGui::InputFloat3("object2Pos", object2Pos);
+	//ImGui::SliderFloat3("object2Pos", object2Pos,-1000,1000);
+	//ImGui::DragFloat3("object2Pos", object2Pos);
 	ImGui::End();
 
 	// コマンドリストの取得

@@ -28,7 +28,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input, Audio* audio) 
 	this->audio = audio;
 
 	// カメラ生成
-	camera = new DebugCamera(WinApp::window_width, WinApp::window_height, input);
+	camera = new Camera(WinApp::window_width, WinApp::window_height);
 
 	// デバッグテキスト用テクスチャ読み込み
 	if (!Sprite::LoadTexture(debugTextTexNumber, L"Resources/debugfont.png")) {
@@ -52,11 +52,10 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input, Audio* audio) 
 
 	// カメラ注視点をセット
 	camera->SetTarget({ 0, 0, 0 });
-	camera->SetDistance(50.0f);
+	camera->SetEye({ 0,0,-1000.0f });
 
 	// モデル名を指定してファイル読み込み
-	model1 = FbxLoader::GetInstance()->LoadModelFromFile("Walking");
-	model2 = FbxLoader::GetInstance()->LoadModelFromFile("cube");
+	model1 = FbxLoader::GetInstance()->LoadModelFromFile("cube");
 
 	// デバイスをセット
 	FbxObject3d::SetDevice(dxCommon->GetDevice());
@@ -68,42 +67,81 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input, Audio* audio) 
 	object1 = new FbxObject3d;
 	object1->Initialize();
 	object1->SetModel(model1);
-
-	object2 = new FbxObject3d;
-	object2->Initialize();
-	object2->SetModel(model2);
+	object1->SetPosition({ 0,y,0 });
 }
 
 void GameScene::Update() {
+
+	if (input->TriggerKey(DIK_C) && (!falling && !shooting)) {
+		if (nowMode == drop) {
+			object1->SetPosition({ defCannonPos });
+			vy = cannonVy;
+			y = defCannonPos.y;
+			nowMode = cannon;
+		}
+		else {
+			object1->SetPosition({ defDropPos });
+			y = defDropPos.y;
+			nowMode = drop;
+		}
+	}
+
+	switch (nowMode)
+	{
+	case drop:
+		if (input->TriggerKey(DIK_SPACE)) {
+			falling = true;
+		}
+
+		if (falling) {
+			vy += gravity;
+			y += vy;
+			object1->SetPosition({ 0,y,0 });
+			if (y <= -500.0f) {
+				falling = false;
+				vy = 0;
+				y = defDropPos.y;
+				object1->SetPosition({ 0,y,0 });
+			}
+		}
+		object1->Update();
+		break;
+	case cannon:
+		if (input->TriggerKey(DIK_SPACE)) {
+			shooting = true;
+		}
+
+		if (shooting) {
+			vy += gravity;
+			y += vy;
+			x += 10;
+			object1->SetPosition({ x,y,0 });
+			if (y <= -500.0f) {
+				shooting = false;
+				vy = cannonVy;
+				y = defCannonPos.y;
+				x = defCannonPos.x;
+				object1->SetPosition({ x,y,0 });
+			}
+		}
+
+		object1->Update();
+		break;
+	default:
+		break;
+	}
+
 	camera->Update();
 	particleMan->Update();
-	//object1->PlayAnimation();
-	if (input->PushPad(ButtonA)||input->PushKey(DIK_0)) {
-		object1->PlayAnimation();
-	}
-	if (input->PushPad(ButtonB)||input->PushKey(DIK_1)) {
-		object1->StopAnimation();
-	}
-
-	object2->SetPosition({object2Pos[0], object2Pos[1], object2Pos[2]});
-
-	object1->Update();
-	object2->Update();
 }
 
 void GameScene::Draw() {
-
-	object2Pos[0] = object2->GetPosition().x;
-	object2Pos[1] = object2->GetPosition().y;
-	object2Pos[2] = object2->GetPosition().z;
-
-	ImGui::Begin("Light");
+	/*ImGui::Begin("Light");
 	ImGui::SetWindowPos(ImVec2(0, 0));
-	ImGui::SetWindowSize(ImVec2(500, 200));
-	ImGui::InputFloat3("object2Pos", object2Pos);
+	ImGui::SetWindowSize(ImVec2(500, 200));*/
 	//ImGui::SliderFloat3("object2Pos", object2Pos,-1000,1000);
 	//ImGui::DragFloat3("object2Pos", object2Pos);
-	ImGui::End();
+	//ImGui::End();
 
 	// コマンドリストの取得
 	ID3D12GraphicsCommandList* cmdList = dxCommon->GetCommandList();
@@ -126,7 +164,6 @@ void GameScene::Draw() {
 
 #pragma region 3D描画
 	object1->Draw(cmdList);
-	object2->Draw(cmdList);
 
 	// パーティクルの描画
 	particleMan->Draw(cmdList);
@@ -139,7 +176,19 @@ void GameScene::Draw() {
 	/// <summary>
 	/// ここに前景スプライトの描画処理を追加できる
 	/// </summary>
-
+	switch (nowMode)
+	{
+	case drop:
+		debugText->GetInstance()->Print("Space:Drop", 0, 0, 3);
+		debugText->GetInstance()->Print("C:ModeChange", 0, 40, 3);
+		break;
+	case cannon:
+		debugText->GetInstance()->Print("Space:Shot", 0, 0, 3);
+		debugText->GetInstance()->Print("C:ModeChange", 0, 40, 3);
+		break;
+	default:
+		break;
+	}
 
 	// デバッグテキストの描画
 	debugText->DrawAll(cmdList);

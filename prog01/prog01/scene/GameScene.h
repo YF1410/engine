@@ -14,6 +14,11 @@
 
 #include <vector>
 
+enum testMode {
+	drop,
+	cannon
+};
+
 /// <summary>
 /// ゲームシーン
 /// </summary>
@@ -67,16 +72,23 @@ private: // メンバ変数
 	/// <summary>
 	/// ゲームシーン用
 	/// </summary>
-	DebugCamera* camera = nullptr;
+	Camera* camera = nullptr;
 	Sprite* spriteBG = nullptr;
 	ParticleManager* particleMan = nullptr;
 
 	FbxModel* model1 = nullptr;
 	FbxObject3d* object1 = nullptr;
 
-	FbxModel* model2 = nullptr;
-	FbxObject3d* object2 = nullptr;
+	testMode nowMode = drop;
 
-	float object2Pos[3] = { 0,0,0 };
+	float vy = 0;
+	const float gravity = -9.8 / 60.0f;
+	float y = 400.0f;
+	float x = -800.0f;
+	bool falling = false;
+	bool shooting = false;
+	const float cannonVy = 10.0f;
+	XMFLOAT3 defDropPos = { 0,400.0f,0 };
+	XMFLOAT3 defCannonPos = {-800.0f,-200.0f,0};
 };
 

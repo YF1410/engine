@@ -122,6 +122,8 @@ protected: // メンバ変数
 	FbxTime endTime;
 	//現在時間(アニメーション
 	FbxTime currentTime;
+	//中断した時間(アニメーション
+	FbxTime saveTime;
 	//アニメーション再生中
 	bool isPlay = false;
 };

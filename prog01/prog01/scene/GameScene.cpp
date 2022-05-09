@@ -78,10 +78,10 @@ void GameScene::Update() {
 	camera->Update();
 	particleMan->Update();
 	//object1->PlayAnimation();
-	if (input->PushPad(ButtonA)||input->PushKey(DIK_0)) {
+	if (input->PushPad(ButtonA)||input->TriggerKey(DIK_P)) {
 		object1->PlayAnimation();
 	}
-	if (input->PushPad(ButtonB)||input->PushKey(DIK_1)) {
+	if (input->PushPad(ButtonB)||input->TriggerKey(DIK_L)) {
 		object1->StopAnimation();
 	}
 
@@ -97,10 +97,10 @@ void GameScene::Draw() {
 	object2Pos[1] = object2->GetPosition().y;
 	object2Pos[2] = object2->GetPosition().z;
 
-	ImGui::Begin("Light");
+	ImGui::Begin("cube");
 	ImGui::SetWindowPos(ImVec2(0, 0));
 	ImGui::SetWindowSize(ImVec2(500, 200));
-	ImGui::InputFloat3("object2Pos", object2Pos);
+	ImGui::InputFloat3("cubePos", object2Pos);
 	//ImGui::SliderFloat3("object2Pos", object2Pos,-1000,1000);
 	//ImGui::DragFloat3("object2Pos", object2Pos);
 	ImGui::End();

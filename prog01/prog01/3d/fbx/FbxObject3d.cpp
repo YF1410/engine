@@ -253,12 +253,12 @@ void FbxObject3d::Update() {
 			currentTime = startTime;
 		}
 	}
-	else if (!isPlay) {
+	/*else if (!isPlay) {
 		currentTime -= frameTime * 2;
 		if (currentTime < startTime) {
 			currentTime = startTime;
 		}
-	}
+	}*/
 
 	// 定数バッファへデータ転送
 	ConstBufferDataSkin* constMapSkin = nullptr;
@@ -290,10 +290,17 @@ void FbxObject3d::PlayAnimation() {
 	startTime = takeinfo->mLocalTimeSpan.GetStart();
 	//終了時間取得
 	endTime = takeinfo->mLocalTimeSpan.GetStop();
-	//開始時間に合わせる
-	currentTime = startTime;
-	//再生中状態にする
-	isPlay = true;
+
+	if (startTime < saveTime) {
+		currentTime = saveTime;
+		isPlay = true;
+	}
+	else {
+		//開始時間に合わせる
+		currentTime = startTime;
+		//再生中状態にする
+		isPlay = true;
+	}
 }
 
 void FbxObject3d::StopAnimation() {
@@ -310,6 +317,7 @@ void FbxObject3d::StopAnimation() {
 	////開始時間に合わせる
 	//currentTime = startTime;
 	//再生していない状態にする
+	saveTime = currentTime;
 	isPlay = false;
 }
 
